@@ -1,4 +1,4 @@
-import {env} from 'cloudflare:workers';
+import {env} from '@/lib/runtime-env';
 import {context,response,fail,checkOrigin,database,AppError,rawRecord,canRead,auditStatement} from '@/lib/server';
 import {staffRoles} from '@/lib/model';
 export async function GET(req:Request){let c;try{c=await context(req);const id=new URL(req.url).searchParams.get('id');const row=await database().prepare("SELECT * FROM records WHERE id=? AND workspace_id=? AND kind='documents' AND archived=0").bind(id,c.workspace.id).first();if(!row||!canRead(rawRecord(row),c))throw new AppError(404,'Document not found.');const data=rawRecord(row).data;if(!env.BUCKET)throw new AppError(503,'Document storage is unavailable.');const object=await env.BUCKET.get(String(data.key));if(!object)throw new AppError(404,'File not found.');return new Response(object.body,{headers:{'Content-Type':String(data.type),'Content-Disposition':`attachment; filename="${String(data.name).replace(/[^a-zA-Z0-9._-]/g,'_')}"`,'Cache-Control':'no-store','X-Content-Type-Options':'nosniff'}})}catch(e){return fail(e,c)}}

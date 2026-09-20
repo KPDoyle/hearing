@@ -1,4 +1,4 @@
-import { env } from 'cloudflare:workers';
+import { env } from './runtime-env';
 import { cookies } from 'next/headers';
 import { getChatGPTUser } from '@/app/chatgpt-auth';
 import { modules, roles, staffRoles, patientKinds, supplierKinds, type CareRecord, type Data, type Role } from './model';

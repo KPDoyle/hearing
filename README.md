@@ -51,7 +51,11 @@ pnpm build
 
 ## Production configuration
 
-The application is designed for a Cloudflare-compatible deployment. Configure the bindings declared in `.openai/hosting.json`:
+The default `build` and `start` commands produce a standard Next.js application for Vercel. When no production database is connected, the public deployment opens a fictional browser demo; demo changes are stored only in that browser and are not shared with other users.
+
+Do not enter real patient information into browser-demo mode. Connect production identity, database, object storage, backups, and audit monitoring before onboarding a clinic.
+
+The repository also retains Cloudflare-specific commands (`dev:cloudflare`, `build:cloudflare`, and `start:cloudflare`). For that deployment path, configure the bindings declared in `.openai/hosting.json`:
 
 - `DB`: Cloudflare D1 database
 - `BUCKET`: Cloudflare R2 bucket for documents
